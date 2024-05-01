@@ -45,9 +45,6 @@ genrule(
 assert_contains(
     name = "check_digest",
     actual = ":hash",
-    expected = "sha256:d15c83f8f8438e5e05ff40478dc98ad923e9afa272b6630c5b29baf6f7e93585",
-    # TODO: enable once there's a new version of crane
-    # https://github.com/google/go-containerregistry/issues/1542
-    # https://github.com/bazel-contrib/rules_oci/issues/58
+    expected = "sha256:1c5b53cfc93dfa8199a016d305f2c69d43b4653659dc273009690cb157a74683",
     tags = ["manual"],
 )

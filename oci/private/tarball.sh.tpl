@@ -94,7 +94,7 @@ LAYERS=$(${JQ} -cr '.layers | map(.digest | sub(":"; "/"))' ${MANIFEST_BLOB_PATH
 add_to_tar "${CONFIG_BLOB_PATH}" "blobs/${CONFIG_DIGEST}"
 
 for LAYER in $(${JQ} -r ".[]" <<< $LAYERS); do 
-  add_to_tar "${IMAGE_DIR}/blobs/${LAYER}" "blobs/${LAYER}.tar.gz"
+  add_to_tar "${IMAGE_DIR}/blobs/${LAYER}" "blobs/${LAYER}"
 done
 
 repotags="${REPOTAGS[@]+"${REPOTAGS[@]}"}"
