@@ -60,23 +60,9 @@ load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 
 rules_pkg_dependencies()
 
-## Unit test repositories
-
-# For sign_external test
-new_local_repository(
-    name = "empty_image",
-    build_file = "//examples/sign_external:BUILD.template",
-    path = "examples/sign_external/workspace",
-)
-
-# For attest_external test
-new_local_repository(
-    name = "example_sbom",
-    build_file = "//examples/attest_external:BUILD.template",
-    path = "examples/attest_external/workspace",
-)
-
-# For testing fetching from various registries
-load(":fetch.bzl", "fetch_images")
+# Fetching various images
+load(":fetch.bzl", "fetch_images", "fetch_unittest_deps")
 
 fetch_images()
+
+fetch_unittest_deps()

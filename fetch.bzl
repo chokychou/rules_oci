@@ -4,7 +4,7 @@ This file is similar to how bazel_gazelle can manage go_repository calls
 by writing them to a generated macro in a .bzl file.
 """
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
 load("@rules_oci//oci:pull.bzl", "oci_pull")
 
 def fetch_images():
@@ -31,9 +31,9 @@ def fetch_images():
         ],
     )
 
-    # Pull an image from public ECR. 
+    # Pull an image from public ECR.
     # When --credential_helper is provided, see .bazelrc at workspace root, it will take precende over
-    # auth from oci_pull. However, pulling from public ECR works out of the box so this will never fail 
+    # auth from oci_pull. However, pulling from public ECR works out of the box so this will never fail
     # unless oci_pull's authentication mechanism breaks and --credential_helper is absent.
     oci_pull(
         name = "ecr_lambda_python",
@@ -41,8 +41,8 @@ def fetch_images():
         tag = "3.11.2024.01.25.10",
         platforms = [
             "linux/amd64",
-            "linux/arm64/v8"
-        ]
+            "linux/arm64/v8",
+        ],
     )
 
     # Show that the digest is optional.
@@ -172,7 +172,7 @@ def fetch_images():
         digest = "sha256:9a83bce5d337e7e19d789ee7f952d36d0d514c80987c3d76d90fd1afd2411a9a",
         platforms = [
             "linux/amd64",
-            "linux/arm64"
+            "linux/arm64",
         ],
     )
 
@@ -183,7 +183,7 @@ def fetch_images():
         digest = "sha256:8d38ffa8fad72f4bc2647644284c16491cc2d375602519a1f963f96ccc916276",
         platforms = [
             "linux/amd64",
-            "linux/arm64"
+            "linux/arm64",
         ],
     )
 
@@ -218,4 +218,39 @@ alias(
             "http://ftp.us.debian.org/debian/pool/main/b/bash/bash_5.1-2+deb11u1_arm64.deb",
         ],
         sha256 = "d7c7af5d86f43a885069408a89788f67f248e8124c682bb73936f33874e0611b",
+    )
+
+def fetch_unittest_deps():
+    "Unit test repositories"
+
+    # For sign_external test
+    native.new_local_repository(
+        name = "empty_image",
+        build_file = "//examples/sign_external:BUILD.template",
+        path = "examples/sign_external/workspace",
+    )
+
+    # For attest_external test
+    native.new_local_repository(
+        name = "example_sbom",
+        build_file = "//examples/attest_external:BUILD.template",
+        path = "examples/attest_external/workspace",
+    )
+
+    http_file(
+        name = "jd_darwin_arm64",
+        urls = [
+            "https://github.com/josephburnett/jd/releases/download/v1.8.1/jd-arm64-darwin",
+        ],
+        sha256 = "8b0e51b902650287b7dedc2beee476b96c5d589309d3a7f556334c1baedbec61",
+        executable = True,
+    )
+
+    http_file(
+        name = "jd_linux_amd64",
+        urls = [
+            "https://github.com/josephburnett/jd/releases/download/v1.8.1/jd-amd64-linux",
+        ],
+        sha256 = "ab918f52130561abd4f88d9c2d3ae95d4d56f1a2dff9762665890349d61c763e",
+        executable = True,
     )
